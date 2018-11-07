@@ -6,9 +6,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const errorHandler = require('errorhandler');
 
-require('./models/users');
-require('./config/passport');
-
 //Initiate our app
 const app = express();
 
@@ -20,17 +17,19 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'passport-tutorial', cookie: { maxAge: 60000 }, resave: false, saveUninitialized: false }));
 
-
 app.use(errorHandler());
+
+require('./models/users');
+require('./config/passport');
+app.use(require('./routes'));
 
 
 app.get('/', (req, res, next) => {
-    console.log('get is here');
     res.send('Hello World!');
 })
 
 
-// //Configure Mongoose
+//Configure Mongoose
 mongoose.connect('mongodb://localhost/passport-tutorial', { useNewUrlParser: true });
 mongoose.set('debug', true);
 
